@@ -444,7 +444,7 @@ class Connection(amqp_object.Class):
 
     class Blocked(amqp_object.Method):
 
-        INDEX = 0x000A003C # 10, 60; 655420
+        INDEX = 0x000A003C  # 10, 60; 655420
         NAME = 'Connection.Blocked'
 
         def __init__(self, reason=''):
@@ -467,15 +467,16 @@ class Connection(amqp_object.Class):
 
         def encode(self):
             pieces = list()
-            assert isinstance(self.reason, str),\
+            assert isinstance(self.reason, basestring),\
                    'A non-bytestring value was supplied for self.reason'
-            value = self.reason.encode('utf-8') if isinstance(self.reason, str) else self.reason
+            value = self.reason.encode('utf-8') if isinstance(self.reason, unicode) else self.reason
+            pieces.append(struct.pack('B', len(value)))
             pieces.append(value)
             return pieces
 
     class Unblocked(amqp_object.Method):
 
-        INDEX = 0x000A003D # 10, 61; 655421
+        INDEX = 0x000A003D  # 10, 61; 655421
         NAME = 'Connection.Unblocked'
 
         def __init__(self):
